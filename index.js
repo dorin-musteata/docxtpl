@@ -65,7 +65,8 @@ const templater = (
   }
 
   // Set variables
-  doc.setData(labels);
+  console.log(typeof labels)
+  doc.setData(JSON.parse(labels));
 
   try {
     doc.render();
@@ -73,10 +74,10 @@ const templater = (
     handler(error);
   }
 
-  var buf = doc.getZip().generate({ type: "nodebuffer" });
+  var buffered = doc.getZip().generate({ type: "nodebuffer" });
 
-  // buf is a nodejs buffer, you can either write it to a file or do anything else with it.
-  fs.writeFileSync(path.resolve(output), buf);
+  // buffered is a nodejs buffer, you can either write it to a file or do anything else with it.
+  return fs.writeFileSync(path.resolve(output), buffered);
 };
 
 /**

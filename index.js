@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 /**
  * Requirements
  */
@@ -65,8 +67,7 @@ const templater = (
   }
 
   // Set variables
-  console.log(typeof labels)
-  doc.setData(JSON.parse(labels));
+  doc.setData(labels);
 
   try {
     doc.render();
@@ -83,4 +84,4 @@ const templater = (
 /**
  *
  */
-module.exports = { templater };
+module.exports.init = templater;

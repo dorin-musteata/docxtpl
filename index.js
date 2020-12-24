@@ -69,7 +69,7 @@ const templater = (
   }
 
   // Set variables
-  doc.setData(labels);
+  doc.setData(JSON.parse(labels));
 
   try {
     doc.render();

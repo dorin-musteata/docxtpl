@@ -1,6 +1,6 @@
 {
   "name": "docxtpl",
-  "version": "2.0",
+  "version": "1.0.0",
   "description": "a simple cli tool to generate docx from a docx template",
   "main": "index.js",
   "scripts": {

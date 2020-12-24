@@ -48,7 +48,7 @@ docxtpl -t template.json -i template.docx -o final.docx
 
 ## Similar tools
 
-There are a few similar libraries that work with docx, here’s a list of those I know a bit about:
+There are a few libraries that work the same way:
 
 - [docxtpl](https://www.docx4java.org/trac/docx4j) : Python. Uses jinja2  template syntax , doesn't provide an easy way to use landscape documents.
 

@@ -4,7 +4,7 @@
 ### Usage
 
 ```
-npx run-func index.js templater '{"key": "value"}' ./source.docx ./output.docx
+docxtpl2pdf templater '{"key": "value"}' ./source.docx ./output.docx
 ```
 
 ---

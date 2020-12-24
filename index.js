@@ -1,96 +1,154 @@
 #!/usr/bin/env node
 
-const package = `[docxtpl2pdf]: `
+'use strict';
 
 /**
- * Requirements
+ * System requirements
  */
-const PizZip = require("pizzip");
-const Docxtemplater = require("docxtemplater");
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 /**
- * The error object contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
+ * Initialize requirements
+ */
+const PizZip = require('pizzip');
+const Docxtemplater = require('docxtemplater');
+const yargs = require('yargs');
+
+/**
+ * Initialize options
+ */
+const options = yargs
+  .usage('Usage: -t <template> -i <input> -o <output>')
+  .option('t', {
+    alias: 'template',
+    describe: 'Template variables [.json]',
+    type: 'string',
+    demandOption: true,
+  })
+  .option('i', {
+    alias: 'input',
+    describe: 'Template source [.docx]',
+    type: 'string',
+    demandOption: false,
+    default: 'source.docx',
+  })
+  .option('o', {
+    alias: 'output',
+    describe: 'Tempalte output [.docx]',
+    type: 'string',
+    default: 'output.docx',
+    demandOption: false,
+  }).argv;
+
+/**
+ * Initialize template parser
+ */
+
+/**
+ * Handle object with all suberrors
  * @param {*} key
  * @param {*} value
  */
-const replaces = (key, value) => {
+const _errors = (key, value) => {
   if (value instanceof Error) {
     return Object.getOwnPropertyNames(value).reduce(function (error, key) {
       error[key] = value[key];
       return error;
     }, {});
   }
+
   return value;
 };
 
 /**
- * Error handler
+ * Handle errors objects
  * @param {*} error
  */
-const handler = (error) => {
-  console.log(JSON.stringify({ error: error }, replaces));
+const _handler = (error) => {
+  console.log(JSON.stringify({ error: error }, _errors));
 
   if (error.properties && error.properties.errors instanceof Array) {
-    const errorMessages = error.properties.errors
+    const errors = error.properties.errors
       .map(function (error) {
         return error.properties.explanation;
       })
-      .join("\n");
+      .join('\n');
 
-    console.log("errorMessages", errorMessages);
+    console.log('errors', errors);
   }
+
   throw error;
 };
 
+// ==========================================================================================================================================
+
 /**
- * Run template conversion
+ * Run template conversion options
  * @param {*} labels
  * @param {*} source
  * @param {*} output
  */
-const templater = (
-  labels = {},
-  source = "source.docx",
-  output = "output.docx"
+const exporter = (
+  template = 'template.json',
+  input = 'source.docx',
+  output = 'output.docx'
 ) => {
-  // Load the docx file as a binary
-  var content = fs.readFileSync(path.resolve(source), "binary");
+  /**
+   * Read .json
+   */
+  var variables = fs.readFileSync(path.resolve(template));
+  variables = JSON.parse(variables);
 
-  // Zip content of document
-  var zip = new PizZip(content);
-  var doc;
+  /**
+   * Read .docx as binary
+   */
+  const content = fs.readFileSync(path.resolve(input), 'binary');
+
+  /**
+   * Zipping contents of document
+   */
+  const zip = new PizZip(content);
+  var document;
+
+  /**
+   * Try to use zipped document
+   */
   try {
-    doc = new Docxtemplater(zip);
+    document = new Docxtemplater(zip);
   } catch (error) {
-    // Catch compilation errors (errors caused by the compilation of the template : misplaced tags)
-    handler(error);
+    /**
+     * Catch compilation errors of template tags
+     */
+    _handler(error);
   }
 
-  // Set variables
-  doc.setData(JSON.parse(labels));
+  /**
+   * Set template variables
+   */
+  document.setData(variables);
 
+  /**
+   * Try to render document and replace template variables
+   */
   try {
-    doc.render();
+    document.render();
   } catch (error) {
-    handler(error);
+    _handler(error);
   }
 
-  var buffered = doc.getZip().generate({ type: "nodebuffer" });
+  /**
+   * Create node buffer of zipped document
+   */
+  const buffered = document.getZip().generate({ type: 'nodebuffer' });
 
-  // buffered is a nodejs buffer, you can either write it to a file or do anything else with it.
+  /**
+   * Write buffer as file
+   */
   return fs.writeFileSync(path.resolve(output), buffered);
 };
 
-const [, , ...args] = process.argv;
-
-if (args.length != 3) {
-  console.error(`${package}invalid number of arguments`)
-  process.exit()
-}
-
 /**
- * Execute with args
+ * Execute exporter
  */
-templater.apply(this, args);
+exporter(options.template, options.input, options.output);

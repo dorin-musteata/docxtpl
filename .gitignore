@@ -2,3 +2,5 @@ node_modules/
 *.lock
 *-lock.json
 *.docx
+*.json
+!package.json

@@ -1,16 +1,17 @@
 {
-  "name": "docxtpl2pdf",
-  "version": "1.0.2",
-  "description": "Tool for converting .docx to .pdf using .docx as template",
+  "name": "docxtpl",
+  "version": "2.0",
+  "description": "a simple cli tool to generate docx from a docx template",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dorin Musteata",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "docxtemplater": "^3.19.7",
-    "pizzip": "^3.0.6"
+    "pizzip": "^3.0.6",
+    "yargs": "^16.2.0"
   },
   "repository": {
     "type": "git",
@@ -18,10 +19,13 @@
   },
   "keywords": [
     "docx",
-    "pdf",
-    "convert"
+    "convert",
+    "json",
+    "template",
+    "docxtemplater",
+    "pizzip"
   ],
   "bin": {
-    "docxtpl2pdf": "./index.js"
+    "docxtpl": "./index.js"
   }
 }

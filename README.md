@@ -4,7 +4,7 @@
 ### Usage
 
 ```
-docxtpl2pdf templater '{"key": "value"}' ./source.docx ./output.docx
+docxtpl2pdf '{"key": "value"}' ./source.docx ./output.docx
 ```
 
 ---

@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env node
+
+const package = `[docxtpl2pdf]: `
 
 /**
  * Requirements
@@ -81,7 +83,14 @@ const templater = (
   return fs.writeFileSync(path.resolve(output), buffered);
 };
 
+const [, , ...args] = process.argv;
+
+if (args.length != 3) {
+  console.error(`${package}invalid number of arguments`)
+  process.exit()
+}
+
 /**
- *
+ * Execute with args
  */
-module.exports.init = templater;
+templater.apply(this, args);

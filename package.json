@@ -20,5 +20,8 @@
     "docx",
     "pdf",
     "convert"
-  ]
+  ],
+  "bin": {
+    "docxtpl2pdf": "./index.js"
+  }
 }
